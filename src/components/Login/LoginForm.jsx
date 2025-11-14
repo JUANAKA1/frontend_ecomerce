@@ -1,9 +1,16 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { FaEye, FaEyeSlash } from 'react-icons/fa'
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { loginService } from '../../services/authServices';
+import { useUser } from '../../hooks/useContext';
+import toast from 'react-hot-toast';
+import { Navigate } from 'react-router';
 
 const LoginForm = () => {
-    const [showPassword, setShowPassword] = useState(false)
+    const { setUserInfo, userInfo } = useUser();
+    const [showPassword, setShowPassword] = useState(false);
+    const [redirect, setRedirect] = useState(false);
+
     const {
         register,
         handleSubmit,
@@ -11,11 +18,28 @@ const LoginForm = () => {
         reset,
     } = useForm({
         mode: 'onChange',
-    })
+    });
 
-    const onSubmit = (data) => {
-        console.log(data)
-        reset()
+    const onSubmit = async (data) => {
+        const result = await loginService(
+            data,
+            reset,
+            setRedirect,
+            setUserInfo
+        );
+        if (result.success) {
+            toast.success(result.message);
+        } else {
+            toast.error(result.message);
+        }
+    };
+
+    if (redirect && userInfo.isAdmin) {
+        // return <Navigate to="/" />;
+    }
+
+    if (redirect && !userInfo.isAdmin) {
+        return <Navigate to="/" />;
     }
 
     return (
@@ -101,7 +125,7 @@ const LoginForm = () => {
             {/* BUTTON */}
             <button className="btn btn-primary mt-2">Iniciar Sesión</button>
         </form>
-    )
-}
+    );
+};
 
-export default LoginForm
+export default LoginForm;

@@ -1,9 +1,11 @@
-import { Link } from 'react-router'
-import AuthButtons from './AuthButtons'
-import Cart from './Cart'
-import UserDropDown from './UserDropDown'
+import { Link } from 'react-router';
+import AuthButtons from './AuthButtons';
+import Cart from './Cart';
+import UserDropDown from './UserDropDown';
+import { useUser } from '../../hooks/useContext';
 
 const Navbar = () => {
+    const { loading, userInfo } = useUser();
     return (
         <header>
             <AuthButtons />
@@ -14,14 +16,16 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <div className="navbar-end gap-3 ">
-                    <a href="" className="btn btn-primary ">
-                        Dasborad
-                    </a>
+                    {userInfo?.isAdmin && (
+                        <Link to="" className="btn btn-primary ">
+                            Dasborad
+                        </Link>
+                    )}
                     <Cart />
-                    <UserDropDown/>
+                    {!loading && userInfo?.username && <UserDropDown />}
                 </div>
             </nav>
         </header>
-    )
-}
-export default Navbar
+    );
+};
+export default Navbar;

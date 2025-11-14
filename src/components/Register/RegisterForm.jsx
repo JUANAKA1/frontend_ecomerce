@@ -1,10 +1,13 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import { registerService } from '../../services/authServices'
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { registerService } from '../../services/authServices';
+import { Navigate } from 'react-router';
+import toast from 'react-hot-toast';
+import { useUser } from '../../hooks/useContext';
 
 const RegisterForm = () => {
-    const [showPassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
     const {
         register,
         handleSubmit,
@@ -12,13 +15,31 @@ const RegisterForm = () => {
         reset,
     } = useForm({
         mode: 'onChange',
-    })
+    });
+    const { userInfo, checkSession } = useUser();
+    const [redirect, setRedirect] = useState(false);
 
-    const onSubmit = (data) => {
-        registerService(data)
-        reset()
+    const onSubmit = async (data) => {
+        const result = await registerService(
+            data,
+            reset,
+            setRedirect,
+            checkSession
+        );
+        if (result.success) {
+            toast.success('Registro exitoso');
+        } else {
+            toast.error('Error, intente más tarde');
+        }
+    };
+
+    if (redirect && userInfo.isAdmin) {
+        // return <Navigate to="/" />;
     }
 
+    if (redirect && !userInfo.isAdmin) {
+        return <Navigate to="/" />;
+    }
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
@@ -129,7 +150,7 @@ const RegisterForm = () => {
             {/* BUTTON */}
             <button className="btn btn-primary mt-2">Registrarse</button>
         </form>
-    )
-}
+    );
+};
 
-export default RegisterForm
+export default RegisterForm;
