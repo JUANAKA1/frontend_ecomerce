@@ -1,8 +1,9 @@
-import { createBrowserRouter } from 'react-router'
-import Layout from '../layout/Layout'
-import Home from '../pages/Home'
-import Register from '../pages/Register'
-import Login from '../pages/Login'
+import { createBrowserRouter } from 'react-router';
+import Layout from '../layout/Layout';
+import Home from '../pages/Home';
+import Register from '../pages/Register';
+import Login from '../pages/Login';
+import { DetailProduct } from '../pages/DetailProduct';
 
 const AppRouter = createBrowserRouter([
     {
@@ -21,7 +22,11 @@ const AppRouter = createBrowserRouter([
                 path: 'login',
                 element: <Login />,
             },
+            {
+                path: 'detailProduct/:id',
+                element: <DetailProduct />,
+            },
         ],
     },
-])
-export default AppRouter
+]);
+export default AppRouter;

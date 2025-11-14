@@ -42,17 +42,23 @@ export const registerService = async (
         const response = await api.post('/api/auth/register', data, {
             headers: { 'Content-Type': 'application/json' },
         });
-        if (response.status === 201 ) {
+
+        if (response.status === 201) {
             await checkSession();
             reset();
             setRedirect(true);
-            
+
             return { success: true };
         }
-    } catch {
+
+        return { success: false };
+
+    } catch (error) {
+        console.error('Error en registerService:', error);
         return { success: false };
     }
 };
+
 
 export const logoutService = async () => {
     try {

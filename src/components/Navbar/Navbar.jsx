@@ -6,6 +6,7 @@ import { useUser } from '../../hooks/useContext';
 
 const Navbar = () => {
     const { loading, userInfo } = useUser();
+    
     return (
         <header>
             <AuthButtons />
