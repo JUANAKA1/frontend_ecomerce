@@ -33,6 +33,110 @@ export const ProductContextProvider = ({ children }) => {
         }
     }, []);
 
+    // Funcion para actualizar un producto
+    const updateProduct = useCallback(async (id, data) => {
+        const cleanData = {
+            name: data.name,
+            description: data.description,
+            price: Number(data.price),
+            stock: Number(data.stock),
+            imageUrl: data.imageUrl,
+        };
+
+        try {
+            const response = await api.put(`/api/products/${id}`, cleanData, {
+                withCredentials: true,
+            });
+
+            if (response.status === 200) {
+                // Actualizar el producto individual
+                setProduct(response.data);
+                // Actualizar el producto en la lista de productos
+                setProducts((prevProducts) =>
+                    prevProducts.map((p) => (p._id === id ? response.data : p))
+                );
+
+                return {
+                    success: true,
+                    message: 'Producto actualizado correctamente',
+                };
+            }
+        } catch (error) {
+            setError(error.message || 'Error al actualizar el producto');
+            return {
+                success: false,
+                message: 'Error al actualizar el producto',
+            };
+        } finally {
+            setProductsLoading(false);
+            setProductLoading(false);
+        }
+    }, []);
+
+    // Funcion para crear un producto
+    const createProduct = useCallback(async (data) => {
+        const cleanData = {
+            name: data.name,
+            description: data.description,
+            price: Number(data.price),
+            stock: Number(data.stock),
+            imageUrl: data.imageUrl,
+        };
+
+        try {
+            const response = await api.post('/api/products', cleanData, {
+                withCredentials: true,
+            });
+
+            if (response.status === 201) {
+                setProducts((prevProducts) => [
+                    ...prevProducts,
+                    response.data.product,
+                ]);
+
+                return {
+                    success: true,
+                    message: response.data.message,
+                };
+            }
+        } catch (error) {
+            setError(error.message || 'Error al crear el producto');
+            return {
+                success: false,
+                message: error.message || 'Error al crear el producto',
+            };
+        } finally {
+            setProductLoading(false);
+        }
+    }, []);
+
+    const deleteProduct = useCallback(async (id) => {
+        try {
+            const response = await api.delete(`/api/products/${id}`, {
+                withCredentials: true,
+            });
+
+            if (response.status === 200) {
+                setProducts((prevProducts) =>
+                    prevProducts.filter((p) => p._id !== id)
+                );
+
+                return {
+                    success: true,
+                    message: 'Producto eliminado correctamente',
+                };
+            }
+        } catch (error) {
+            setError(error.message || 'Error al eliminar el prducto');
+            return {
+                success: false,
+                message: 'Error al eliminar el producto',
+            };
+        } finally {
+            setProductsLoading(false);
+        }
+    }, []);
+
     useEffect(() => {
         getProducts();
     }, [getProducts]);
@@ -40,11 +144,14 @@ export const ProductContextProvider = ({ children }) => {
     const value = {
         product,
         products,
-        productLoading,
         productsLoading,
+        productLoading,
         error,
         getProducts,
         getProductById,
+        updateProduct,
+        createProduct,
+        deleteProduct,
     };
     return <ProductContext value={value}>{children}</ProductContext>;
 };

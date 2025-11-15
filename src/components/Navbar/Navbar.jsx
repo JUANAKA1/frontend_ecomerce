@@ -18,7 +18,7 @@ const Navbar = () => {
                 </div>
                 <div className="navbar-end gap-3 ">
                     {userInfo?.isAdmin && (
-                        <Link to="" className="btn btn-primary ">
+                        <Link to="/admin/dashboard/" className="btn btn-primary ">
                             Dasborad
                         </Link>
                     )}

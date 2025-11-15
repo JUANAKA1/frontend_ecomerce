@@ -1,23 +1,27 @@
 import { useEffect } from 'react';
-import { useProduct } from '../hooks/useContext';
+
 import { useParams } from 'react-router';
+import { useCart, useProduct } from '../hooks/useContext';
 
 export const DetailProduct = () => {
-    const { product, getProductById, productLoading } = useProduct();
-    
     const { id } = useParams();
-
-
+    const { getProductById, product, productLoading } = useProduct();
+    const { addToCart, openModal } = useCart();
     useEffect(() => {
         getProductById(id);
-    }, [getProductById, id]);
+    }, [id, getProductById]);
+
+    const handleAddToCart = async () => {
+        await addToCart(product);
+        openModal();
+    };
 
     return (
         <>
             {productLoading ? (
                 <div className="loading loading-spinner"></div>
             ) : (
-                <div className="mt-6 md:flex gap-4">
+                <div className="mt-6 md:flex">
                     <div className="md:w-1/2">
                         <img src={product.imageUrl} alt={product.name} />
                     </div>
@@ -28,7 +32,7 @@ export const DetailProduct = () => {
                         </p>
                         <p className="text-lg">{product.description}</p>
                         <button
-                            // onClick={handleAddToCart}
+                            onClick={handleAddToCart}
                             className="btn btn-success mt-2 md:mt-auto md:btn-lg"
                         >
                             Agregar al carrito
@@ -37,5 +41,5 @@ export const DetailProduct = () => {
                 </div>
             )}
         </>
-    )
-}
+    );
+};

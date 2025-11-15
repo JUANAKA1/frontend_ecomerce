@@ -4,6 +4,10 @@ import Home from '../pages/Home';
 import Register from '../pages/Register';
 import Login from '../pages/Login';
 import { DetailProduct } from '../pages/DetailProduct';
+import { DashboardLayout } from '../layout/DashboardLayout';
+import { TableProductDashboard } from '../components/AdminDasboard/TableProductDashboard/TableProductDashboard';
+import { CreateProduct } from '../pages/CreateProduct';
+import { UpdateProduct } from '../pages/UpdateProduct';
 
 const AppRouter = createBrowserRouter([
     {
@@ -25,6 +29,29 @@ const AppRouter = createBrowserRouter([
             {
                 path: 'detailProduct/:id',
                 element: <DetailProduct />,
+            },
+        ],
+    },
+    {
+        path: '/admin/dashboard/',
+        element: <DashboardLayout />,
+        children: [
+            {
+                index: true,
+                element: <TableProductDashboard />,
+            },
+            {
+                path: 'products',
+                element: <TableProductDashboard  />,
+
+            },
+            {
+                path: 'products/createProduct',
+                element: <CreateProduct />,
+            },
+            {
+                path: 'products/updateProduct/:id',
+                element: <UpdateProduct/>,
             },
         ],
     },
