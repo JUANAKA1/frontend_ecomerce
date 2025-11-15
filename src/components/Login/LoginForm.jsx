@@ -35,7 +35,7 @@ const LoginForm = () => {
     };
 
     if (redirect && userInfo.isAdmin) {
-        // return <Navigate to="/" />;
+        return <Navigate to="/" />;
     }
 
     if (redirect && !userInfo.isAdmin) {
