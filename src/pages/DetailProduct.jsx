@@ -4,7 +4,10 @@ import { useParams } from 'react-router';
 
 export const DetailProduct = () => {
     const { product, getProductById, productLoading } = useProduct();
+    
     const { id } = useParams();
+
+
     useEffect(() => {
         getProductById(id);
     }, [getProductById, id]);
