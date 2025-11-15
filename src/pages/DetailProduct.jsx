@@ -21,7 +21,7 @@ export const DetailProduct = () => {
             {productLoading ? (
                 <div className="loading loading-spinner"></div>
             ) : (
-                <div className="mt-6 md:flex">
+                <div className="mt-6 md:flex gap-4">
                     <div className="md:w-1/2">
                         <img src={product.imageUrl} alt={product.name} />
                     </div>

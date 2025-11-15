@@ -9,8 +9,6 @@ export const TableProducts = ({ products }) => {
     const onHandleDelete = async (id) => {
         const result = await deleteProduct(id)
 
-        console.log(result)
-
         if (result.success) {
             toast.success(result.message)
         } else {
